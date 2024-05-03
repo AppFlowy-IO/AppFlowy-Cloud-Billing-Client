@@ -19,6 +19,7 @@ async fn test_payment_link() {
             &workspace_id,
             appflowy_cloud_billing_client::RecurringInterval::Month,
             appflowy_cloud_billing_client::SubscriptionPlan::Pro,
+            "https://appflowy.io",
         )
         .await
         .unwrap();
