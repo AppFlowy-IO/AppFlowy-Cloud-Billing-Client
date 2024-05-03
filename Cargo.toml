@@ -1,0 +1,16 @@
+[package]
+name = "appflowy-cloud-billing-client"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+client-api = "0.1.0"
+reqwest = "0.11"
+tokio = "1.37"
+
+[patch.crates-io]
+# will be removed when using yrs 0.18.2 that expose pendings
+yrs = { git = "https://github.com/appflowy/y-crdt", rev = "3f25bb510ca5274e7657d3713fbed41fb46b4487" }
+client-api = { git = " https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "af75e8a2c00d9f8f2dd444bb50c30dd5ba490e3d" }
+collab = { git = "https://github.com/AppFlowy-IO/AppFlowy-Collab", rev = "29475f0ec00dc06b42da68bc54efa5b7c1bcd0ff" }
+collab-entity = { git = "https://github.com/AppFlowy-IO/AppFlowy-Collab", rev = "29475f0ec00dc06b42da68bc54efa5b7c1bcd0ff" }
