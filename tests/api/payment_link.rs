@@ -23,8 +23,5 @@ async fn test_payment_link() {
         )
         .await
         .unwrap();
-
-    let a = client.base_url;
-
-    //assert!(url.starts_with("https://checkout.stripe.com/"));
+    assert!(url.starts_with("https://checkout.stripe.com/"));
 }

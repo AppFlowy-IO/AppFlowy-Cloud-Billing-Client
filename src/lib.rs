@@ -36,6 +36,7 @@ impl SubscriptionPlan {
 }
 
 pub trait PaymentClient {
+    fn billing_base_url(&self) -> &str;
     fn stripe_payment_link(
         &self,
         workspace_id: &str,
@@ -54,9 +55,10 @@ impl PaymentClient for Client {
         success_url: &str,
     ) -> Result<String, AppResponseError> {
         let url = format!(
-            "{}/billing/api/v1/stripe/subscription-payment-link",
-            self.base_url,
+            "{}/billing/api/v1/subscription-link",
+            &self.billing_base_url(),
         );
+
         let resp = self
             .http_client_with_auth(Method::GET, &url)
             .await?
@@ -75,5 +77,11 @@ impl PaymentClient for Client {
         AppResponse::<String>::from_response(resp)
             .await?
             .into_data()
+    }
+
+    fn billing_base_url(&self) -> &str {
+        // local test: "http://localhost:4242"
+        // &self.base_url
+        "http://localhost:4242"
     }
 }
