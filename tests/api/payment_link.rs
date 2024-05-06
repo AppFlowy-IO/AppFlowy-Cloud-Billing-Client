@@ -1,4 +1,7 @@
-use appflowy_cloud_billing_client::PaymentClient;
+use appflowy_cloud_billing_client::{
+    entities::{RecurringInterval, SubscriptionPlan},
+    WorkspaceSubscriptionClient,
+};
 use client_api_test_util::generate_unique_registered_user_client;
 
 #[tokio::test]
@@ -15,10 +18,10 @@ async fn test_payment_link() {
         .to_string();
 
     let url = client
-        .stripe_payment_link(
+        .create_subscription(
             &workspace_id,
-            appflowy_cloud_billing_client::RecurringInterval::Month,
-            appflowy_cloud_billing_client::SubscriptionPlan::Pro,
+            RecurringInterval::Month,
+            SubscriptionPlan::Pro,
             "https://appflowy.io",
         )
         .await

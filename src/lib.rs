@@ -1,53 +1,38 @@
+pub mod entities;
 use client_api::Client;
+use entities::{RecurringInterval, SubscriptionPlan};
 use reqwest::Method;
-use serde::{Deserialize, Serialize};
 use shared_entity::response::{AppResponse, AppResponseError};
 
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum RecurringInterval {
-    Month,
-    Year,
-}
-
-impl RecurringInterval {
-    fn as_str(&self) -> &str {
-        match self {
-            RecurringInterval::Month => "month",
-            RecurringInterval::Year => "year",
-        }
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
-#[serde(rename_all = "snake_case")]
-pub enum SubscriptionPlan {
-    Pro,
-    Team,
-}
-
-impl SubscriptionPlan {
-    fn as_str(&self) -> &str {
-        match self {
-            SubscriptionPlan::Pro => "pro",
-            SubscriptionPlan::Team => "team",
-        }
-    }
-}
-
-pub trait PaymentClient {
+pub trait WorkspaceSubscriptionClient {
     fn billing_base_url(&self) -> &str;
-    fn stripe_payment_link(
+
+    fn create_subscription(
         &self,
         workspace_id: &str,
         recurring_interval: RecurringInterval,
         workspace_subscription_plan: SubscriptionPlan,
         success_url: &str,
     ) -> impl std::future::Future<Output = Result<String, AppResponseError>> + Send;
+
+    fn list_subscription(
+        &self,
+    ) -> impl std::future::Future<Output = Result<(), AppResponseError>> + Send;
+
+    fn cancel_subscription(
+        &self,
+        workspace_id: &str,
+    ) -> impl std::future::Future<Output = Result<(), AppResponseError>> + Send;
 }
 
-impl PaymentClient for Client {
-    async fn stripe_payment_link(
+impl WorkspaceSubscriptionClient for Client {
+    fn billing_base_url(&self) -> &str {
+        // local test: "http://localhost:4242"
+        // &self.base_url
+        "http://localhost:4242"
+    }
+
+    async fn create_subscription(
         &self,
         workspace_id: &str,
         recurring_interval: RecurringInterval,
@@ -79,9 +64,11 @@ impl PaymentClient for Client {
             .into_data()
     }
 
-    fn billing_base_url(&self) -> &str {
-        // local test: "http://localhost:4242"
-        // &self.base_url
-        "http://localhost:4242"
+    async fn cancel_subscription(&self, workspace_id: &str) -> Result<(), AppResponseError> {
+        todo!()
+    }
+
+    async fn list_subscription(&self) -> Result<(), AppResponseError> {
+        todo!()
     }
 }
