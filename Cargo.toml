@@ -5,7 +5,6 @@ edition = "2021"
 
 [dependencies]
 shared-entity = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "48281f43e5ccd374c30888c1d26e9716d1da6541" }
-app-error = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "48281f43e5ccd374c30888c1d26e9716d1da6541" }
 
 client-api = "0.1.0"
 reqwest = "0.11"

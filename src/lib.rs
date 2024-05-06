@@ -1,9 +1,9 @@
 pub mod entities;
-use client_api::Client;
+use client_api::{error::AppResponseError, Client};
 use entities::{RecurringInterval, SubscriptionPlan, WorkspaceSubscriptionStatus};
 use reqwest::Method;
 use serde_json::json;
-use shared_entity::response::{AppResponse, AppResponseError};
+use shared_entity::response::AppResponse;
 
 pub trait WorkspaceSubscriptionClient {
     fn billing_base_url(&self) -> &str;
