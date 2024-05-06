@@ -1,7 +1,8 @@
 pub mod entities;
 use client_api::Client;
-use entities::{RecurringInterval, SubscriptionPlan};
+use entities::{RecurringInterval, SubscriptionPlan, WorkspaceSubscriptionStatus};
 use reqwest::Method;
+use serde_json::json;
 use shared_entity::response::{AppResponse, AppResponseError};
 
 pub trait WorkspaceSubscriptionClient {
@@ -17,14 +18,14 @@ pub trait WorkspaceSubscriptionClient {
 
     fn list_subscription(
         &self,
-    ) -> impl std::future::Future<Output = Result<(), AppResponseError>> + Send;
+    ) -> impl std::future::Future<Output = Result<Vec<WorkspaceSubscriptionStatus>, AppResponseError>>
+           + Send;
 
     fn cancel_subscription(
         &self,
         workspace_id: &str,
     ) -> impl std::future::Future<Output = Result<(), AppResponseError>> + Send;
 }
-
 impl WorkspaceSubscriptionClient for Client {
     fn billing_base_url(&self) -> &str {
         // local test: "http://localhost:4242"
@@ -65,10 +66,34 @@ impl WorkspaceSubscriptionClient for Client {
     }
 
     async fn cancel_subscription(&self, workspace_id: &str) -> Result<(), AppResponseError> {
-        todo!()
+        let url = format!(
+            "{}/billing/api/v1/cancel-subscription",
+            &self.billing_base_url(),
+        );
+        let resp = self
+            .http_client_with_auth(Method::POST, &url)
+            .await?
+            .json(&json!({ "workspace_id": workspace_id }))
+            .send()
+            .await?;
+        AppResponse::<()>::from_response(resp).await?.into_error()
     }
 
-    async fn list_subscription(&self) -> Result<(), AppResponseError> {
-        todo!()
+    async fn list_subscription(
+        &self,
+    ) -> Result<Vec<WorkspaceSubscriptionStatus>, AppResponseError> {
+        let url = format!(
+            "{}/billing/api/v1/subscription-status",
+            &self.billing_base_url(),
+        );
+        let resp = self
+            .http_client_with_auth(Method::GET, &url)
+            .await?
+            .send()
+            .await?;
+
+        AppResponse::<Vec<WorkspaceSubscriptionStatus>>::from_response(resp)
+            .await?
+            .into_data()
     }
 }
