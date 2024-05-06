@@ -32,7 +32,7 @@ impl SubscriptionPlan {
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 #[serde(rename_all = "snake_case")]
 #[repr(i16)]
 pub enum WorkspaceSubscriptionPlan {
@@ -56,7 +56,7 @@ pub enum SubscriptionStatus {
     Unpaid,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct WorkspaceSubscriptionStatus {
     pub workspace_id: uuid::Uuid,
     pub workspace_plan: WorkspaceSubscriptionPlan,
