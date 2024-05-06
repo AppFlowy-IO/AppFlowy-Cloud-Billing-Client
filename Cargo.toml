@@ -4,12 +4,14 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+shared-entity = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "48281f43e5ccd374c30888c1d26e9716d1da6541" }
+app-error = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "48281f43e5ccd374c30888c1d26e9716d1da6541" }
+
 client-api = "0.1.0"
 reqwest = "0.11"
 serde = "1.0"
 serde_json = "1.0"
 tokio = "1.37"
-shared-entity = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "48281f43e5ccd374c30888c1d26e9716d1da6541" }
 
 [patch.crates-io]
 # will be removed when using yrs 0.18.2 that expose pendings
