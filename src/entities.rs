@@ -58,7 +58,7 @@ pub enum SubscriptionStatus {
 
 #[derive(Deserialize, Debug)]
 pub struct WorkspaceSubscriptionStatus {
-    pub workspace_id: uuid::Uuid,
+    pub workspace_id: String,
     pub workspace_plan: WorkspaceSubscriptionPlan,
     pub subscription_status: SubscriptionStatus,
 }
