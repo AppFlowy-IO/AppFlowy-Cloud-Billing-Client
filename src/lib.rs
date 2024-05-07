@@ -28,9 +28,8 @@ pub trait WorkspaceSubscriptionClient {
 }
 impl WorkspaceSubscriptionClient for Client {
     fn billing_base_url(&self) -> &str {
-        // local test: "http://localhost:4242"
-        // &self.base_url
-        "http://localhost:4242"
+        // "http://localhost:4242"
+        &self.base_url
     }
 
     async fn create_subscription(
