@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-shared-entity = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "48281f43e5ccd374c30888c1d26e9716d1da6541" }
+shared-entity = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "47e6f1e8" }
 
 client-api = "0.1.0"
 reqwest = "0.11"
@@ -15,7 +15,7 @@ tokio = "1.37"
 [patch.crates-io]
 # will be removed when using yrs 0.18.2 that expose pendings
 # yrs = { git = "https://github.com/appflowy/y-crdt", rev = "3f25bb510ca5274e7657d3713fbed41fb46b4487" }
-client-api = { git = " https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "48281f43e5ccd374c30888c1d26e9716d1da6541" }
+client-api = { git = " https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "47e6f1e8" }
 collab = { git = "https://github.com/AppFlowy-IO/AppFlowy-Collab", rev = "870cd70" }
 collab-entity = { git = "https://github.com/AppFlowy-IO/AppFlowy-Collab", rev = "870cd70" }
 collab-document = { git = "https://github.com/AppFlowy-IO/AppFlowy-Collab", rev = "870cd70" }
@@ -23,4 +23,4 @@ collab-folder = { git = "https://github.com/AppFlowy-IO/AppFlowy-Collab", rev = 
 
 [dev-dependencies]
 # AppFlowy dependencies
-client-api-test-util = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "48281f43e5ccd374c30888c1d26e9716d1da6541" }
+client-api-test-util = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "47e6f1e8" }
