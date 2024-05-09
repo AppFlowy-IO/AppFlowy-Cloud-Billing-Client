@@ -60,5 +60,6 @@ pub enum SubscriptionStatus {
 pub struct WorkspaceSubscriptionStatus {
     pub workspace_id: String,
     pub workspace_plan: WorkspaceSubscriptionPlan,
+    pub recurring_interval: RecurringInterval,
     pub subscription_status: SubscriptionStatus,
 }

@@ -43,7 +43,7 @@ async fn test_get_subscription() {
         .unwrap();
 
     let subscriptions = client.list_subscription().await.unwrap();
-    panic!("{:?}", subscriptions);
+    panic!("{:#?}", subscriptions);
 }
 
 #[tokio::test]
