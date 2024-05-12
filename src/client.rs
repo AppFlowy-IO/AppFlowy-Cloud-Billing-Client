@@ -4,7 +4,10 @@ use serde_json::json;
 use shared_entity::response::AppResponse;
 
 use crate::{
-    entities::{RecurringInterval, SubscriptionPlan, WorkspaceSubscriptionStatus, WorkspaceUsage},
+    entities::{
+        RecurringInterval, SubscriptionPlan, WorkspaceSubscriptionStatus, WorkspaceUsage,
+        WorkspaceUsageLimit,
+    },
     WorkspaceSubscriptionClient,
 };
 
@@ -80,8 +83,34 @@ impl WorkspaceSubscriptionClient for Client {
 
     async fn get_workspace_usage(
         &self,
-        _workspace_id: &str,
+        workspace_id: &str,
     ) -> Result<WorkspaceUsage, AppResponseError> {
-        todo!()
+        let num_members = self.get_workspace_members(workspace_id).await?.len();
+        let limits = get_workspace_limits(self, workspace_id).await?;
+        let doc_usage = self.get_workspace_usage(workspace_id).await?;
+
+        let workspace_usage = WorkspaceUsage {
+            member_count: num_members,
+            member_count_limit: limits.member_count,
+            total_blob_bytes: doc_usage.consumed_capacity as _,
+            total_blob_bytes_limit: limits.total_blob_size,
+        };
+        Ok(workspace_usage)
     }
+}
+
+async fn get_workspace_limits(
+    client: &Client,
+    workspace_id: &str,
+) -> Result<WorkspaceUsageLimit, AppResponseError> {
+    let url = format!("{}/api/workspace/{}/limit", &client.base_url, workspace_id);
+    client
+        .http_client_with_auth(Method::GET, &url)
+        .await?
+        .send()
+        .await?
+        .error_for_status()?
+        .json::<AppResponse<WorkspaceUsageLimit>>()
+        .await?
+        .into_data()
 }

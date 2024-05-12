@@ -69,8 +69,15 @@ pub struct WorkspaceUsage {
     pub member_count: usize,
     pub member_count_limit: usize,
     pub total_blob_bytes: usize,
-    pub total_blob_bytes_limit: String,
+    pub total_blob_bytes_limit: usize,
     // TODO(AI):
     // pub ai_responses: String,
     // pub ai_responses_limit: String,
+}
+
+#[derive(Deserialize)]
+pub struct WorkspaceUsageLimit {
+    pub total_blob_size: usize,
+    pub single_blob_size: usize,
+    pub member_count: usize,
 }
