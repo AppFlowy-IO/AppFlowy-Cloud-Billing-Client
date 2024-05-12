@@ -63,3 +63,14 @@ pub struct WorkspaceSubscriptionStatus {
     pub recurring_interval: RecurringInterval,
     pub subscription_status: SubscriptionStatus,
 }
+
+#[derive(Deserialize, Debug)]
+pub struct WorkspaceUsage {
+    pub member_count: usize,
+    pub member_count_limit: usize,
+    pub total_blob_bytes: usize,
+    pub total_blob_bytes_limit: String,
+    // TODO(AI):
+    // pub ai_responses: String,
+    // pub ai_responses_limit: String,
+}
