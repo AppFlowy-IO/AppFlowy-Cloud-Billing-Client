@@ -1,7 +1,6 @@
 pub mod entities;
 use crate::entities::WorkspaceUsageLimit;
 use client_api::error::AppResponseError;
-use client_api::Client;
 use entities::{RecurringInterval, SubscriptionPlan, WorkspaceSubscriptionStatus, WorkspaceUsage};
 use reqwest::Method;
 use serde_json::json;
@@ -38,7 +37,7 @@ pub trait WorkspaceSubscriptionClient {
     ) -> impl std::future::Future<Output = Result<String, AppResponseError>> + Send;
 }
 
-impl WorkspaceSubscriptionClient for Client {
+impl WorkspaceSubscriptionClient for client_api::Client {
     fn billing_base_url(&self) -> &str {
         // "http://localhost:4242"
         &self.base_url
@@ -144,7 +143,7 @@ impl WorkspaceSubscriptionClient for Client {
 }
 
 async fn get_workspace_limits(
-    client: &Client,
+    client: &client_api::Client,
     workspace_id: &str,
 ) -> Result<WorkspaceUsageLimit, AppResponseError> {
     let url = format!("{}/api/workspace/{}/limit", &client.base_url, workspace_id);
