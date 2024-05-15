@@ -2,7 +2,7 @@ use appflowy_cloud_billing_client::{
     entities::{RecurringInterval, SubscriptionPlan},
     WorkspaceSubscriptionClient,
 };
-use client_api_test_util::{generate_unique_registered_user_client, localhost_client};
+use client_api_test::{generate_unique_registered_user_client, localhost_client};
 
 #[tokio::test]
 async fn test_payment_link() {
