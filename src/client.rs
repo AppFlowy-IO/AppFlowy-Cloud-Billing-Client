@@ -97,6 +97,23 @@ impl WorkspaceSubscriptionClient for Client {
         };
         Ok(workspace_usage)
     }
+
+    async fn get_portal_session_link(&self) -> Result<String, AppResponseError> {
+        let url = format!(
+            "{}/billing/api/v1/portal-session-link",
+            &self.billing_base_url(),
+        );
+        let portal_url = self
+            .http_client_with_auth(Method::GET, &url)
+            .await?
+            .send()
+            .await?
+            .error_for_status()?
+            .json::<AppResponse<String>>()
+            .await?
+            .into_data()?;
+        Ok(portal_url)
+    }
 }
 
 async fn get_workspace_limits(

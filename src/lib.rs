@@ -28,4 +28,8 @@ pub trait WorkspaceSubscriptionClient {
         &self,
         workspace_id: &str,
     ) -> impl std::future::Future<Output = Result<WorkspaceUsage, AppResponseError>> + Send;
+
+    fn get_portal_session_link(
+        &self,
+    ) -> impl std::future::Future<Output = Result<String, AppResponseError>> + Send;
 }
