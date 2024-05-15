@@ -1,6 +1,7 @@
 use appflowy_cloud_billing_client::{
+    cancel_subscription, create_subscription,
     entities::{RecurringInterval, SubscriptionPlan},
-    WorkspaceSubscriptionClient,
+    get_portal_session_link, get_workspace_usage, list_subscription,
 };
 use client_api_test::{generate_unique_registered_user_client, localhost_client};
 
@@ -19,15 +20,15 @@ async fn test_payment_link() {
         .workspace_id
         .to_string();
 
-    let url = client
-        .create_subscription(
-            &workspace_id,
-            RecurringInterval::Month,
-            SubscriptionPlan::Pro,
-            "https://appflowy.io",
-        )
-        .await
-        .unwrap();
+    let url = create_subscription(
+        &client,
+        &workspace_id,
+        RecurringInterval::Month,
+        SubscriptionPlan::Pro,
+        "https://appflowy.io",
+    )
+    .await
+    .unwrap();
     // assert!(url.starts_with("https://checkout.stripe.com/"));
     panic!("{:?}", url);
 }
@@ -44,7 +45,7 @@ async fn test_get_subscription() {
         .await
         .unwrap();
 
-    let subscriptions = client.list_subscription().await.unwrap();
+    let subscriptions = list_subscription(&client).await.unwrap();
     panic!("{:#?}", subscriptions);
 }
 
@@ -70,7 +71,7 @@ async fn test_cancel_subscription() {
         .workspace_id
         .to_string();
 
-    client.cancel_subscription(&workspace_id).await.unwrap();
+    cancel_subscription(&client, &workspace_id).await.unwrap();
 }
 
 #[tokio::test]
@@ -95,9 +96,7 @@ async fn test_get_usage() {
         .workspace_id
         .to_string();
 
-    let u = WorkspaceSubscriptionClient::get_workspace_usage(&client, &workspace_id)
-        .await
-        .unwrap();
+    let u = get_workspace_usage(&client, &workspace_id).await.unwrap();
     panic!("{:?}", u);
 }
 
@@ -113,6 +112,6 @@ async fn test_get_portal_link() {
         .await
         .unwrap();
 
-    let url = client.get_portal_session_link().await.unwrap();
+    let url = get_portal_session_link(&client).await.unwrap();
     panic!("{:?}", url);
 }
