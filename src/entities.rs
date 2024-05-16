@@ -75,7 +75,7 @@ pub struct WorkspaceUsage {
     // pub ai_responses_limit: String,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct WorkspaceUsageLimit {
     pub total_blob_size: usize,
     pub single_blob_size: usize,

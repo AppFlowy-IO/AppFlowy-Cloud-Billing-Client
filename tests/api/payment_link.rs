@@ -4,6 +4,8 @@ use appflowy_cloud_billing_client::{
 };
 use client_api_test::{generate_unique_registered_user_client, localhost_client};
 
+use crate::BillingClient;
+
 #[tokio::test]
 async fn test_payment_link() {
     let (client, user) = generate_unique_registered_user_client().await;
@@ -19,7 +21,7 @@ async fn test_payment_link() {
         .workspace_id
         .to_string();
 
-    let url = client
+    let url = BillingClient::from(client)
         .create_subscription(
             &workspace_id,
             RecurringInterval::Month,
@@ -28,6 +30,7 @@ async fn test_payment_link() {
         )
         .await
         .unwrap();
+
     // assert!(url.starts_with("https://checkout.stripe.com/"));
     panic!("{:?}", url);
 }
@@ -44,7 +47,10 @@ async fn test_get_subscription() {
         .await
         .unwrap();
 
-    let subscriptions = client.list_subscription().await.unwrap();
+    let subscriptions = BillingClient::from(client)
+        .list_subscription()
+        .await
+        .unwrap();
     panic!("{:#?}", subscriptions);
 }
 
@@ -70,7 +76,10 @@ async fn test_cancel_subscription() {
         .workspace_id
         .to_string();
 
-    client.cancel_subscription(&workspace_id).await.unwrap();
+    BillingClient::from(client)
+        .cancel_subscription(&workspace_id)
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
@@ -95,9 +104,11 @@ async fn test_get_usage() {
         .workspace_id
         .to_string();
 
-    let u = WorkspaceSubscriptionClient::get_workspace_usage(&client, &workspace_id)
+    let u = BillingClient::from(client)
+        .get_workspace_limit(&workspace_id)
         .await
         .unwrap();
+
     panic!("{:?}", u);
 }
 
@@ -113,6 +124,9 @@ async fn test_get_portal_link() {
         .await
         .unwrap();
 
-    let url = client.get_portal_session_link().await.unwrap();
+    let url = BillingClient::from(client)
+        .get_portal_session_link()
+        .await
+        .unwrap();
     panic!("{:?}", url);
 }
