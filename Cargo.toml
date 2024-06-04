@@ -4,8 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-shared-entity = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "45bfcc0a31e84996157c69a60c8458eeb98b5f96" }
-client-api = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "45bfcc0a31e84996157c69a60c8458eeb98b5f96" }
+# AppFlowy dependencies
+client-api = { version = "0.2" }
+shared-entity = { version = "0.1" }
+
 reqwest = "0.11"
 serde = "1.0"
 serde_json = "1.0"
@@ -17,6 +19,8 @@ yrs = "0.18.8"
 client-api-test = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "45bfcc0a31e84996157c69a60c8458eeb98b5f96" }
 
 [patch.crates-io]
+shared-entity = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "45bfcc0a31e84996157c69a60c8458eeb98b5f96" }
+client-api = { git = "https://github.com/AppFlowy-IO/AppFlowy-Cloud", rev = "45bfcc0a31e84996157c69a60c8458eeb98b5f96" }
 # It's diffcult to resovle different version with the same crate used in AppFlowy Frontend and the Client-API crate.
 # So using patch to workaround this issue.
 collab = {  git = "https://github.com/AppFlowy-IO/AppFlowy-Collab", rev = "cca5135f0010fa5de22a298cbed939e21575538c" }
