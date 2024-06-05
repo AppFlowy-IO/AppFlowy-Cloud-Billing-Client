@@ -38,7 +38,7 @@ async fn test_get_subscription() {
     client
         // registered and subscribed user (TODO: simulate subscribed user for automated testing)
         .sign_in_password(
-            "user_9c064aff-ca1a-4063-8263-3fcaacb3adb8@appflowy.io",
+            "user_ce5c12f5-3afa-456a-9fbc-492acee7c2e0@appflowy.io",
             "Hello123!",
         )
         .await
@@ -116,3 +116,4 @@ async fn test_get_portal_link() {
     let url = client.get_portal_session_link().await.unwrap();
     panic!("{:?}", url);
 }
+
