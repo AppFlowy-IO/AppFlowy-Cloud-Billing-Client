@@ -25,6 +25,21 @@ impl BillingClient {
         self.billing_base_url = billing_base_url;
     }
 
+    pub async fn customer_id(&self) -> Result<String, AppResponseError> {
+        let url = format!("{}/billing/api/v1/customer-id", &self.billing_base_url,);
+
+        let resp = self
+            .client
+            .http_client_with_auth(Method::GET, &url)
+            .await?
+            .send()
+            .await?;
+
+        AppResponse::<String>::from_response(resp)
+            .await?
+            .into_data()
+    }
+
     pub async fn create_subscription(
         &self,
         workspace_id: &str,
