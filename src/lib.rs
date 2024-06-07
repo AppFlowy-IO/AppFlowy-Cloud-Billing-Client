@@ -6,44 +6,26 @@ use reqwest::Method;
 use serde_json::json;
 use shared_entity::response::AppResponse;
 
-pub trait WorkspaceSubscriptionClient {
-    fn billing_base_url(&self) -> &str;
-
-    fn create_subscription(
-        &self,
-        workspace_id: &str,
-        recurring_interval: RecurringInterval,
-        workspace_subscription_plan: SubscriptionPlan,
-        success_url: &str,
-    ) -> impl std::future::Future<Output = Result<String, AppResponseError>> + Send;
-
-    fn list_subscription(
-        &self,
-    ) -> impl std::future::Future<Output = Result<Vec<WorkspaceSubscriptionStatus>, AppResponseError>>
-           + Send;
-
-    fn cancel_subscription(
-        &self,
-        workspace_id: &str,
-    ) -> impl std::future::Future<Output = Result<(), AppResponseError>> + Send;
-
-    fn get_workspace_usage(
-        &self,
-        workspace_id: &str,
-    ) -> impl std::future::Future<Output = Result<WorkspaceUsage, AppResponseError>> + Send;
-
-    fn get_portal_session_link(
-        &self,
-    ) -> impl std::future::Future<Output = Result<String, AppResponseError>> + Send;
+pub struct BillingClient {
+    billing_base_url: String,
+    client: client_api::Client,
 }
 
-impl WorkspaceSubscriptionClient for client_api::Client {
-    fn billing_base_url(&self) -> &str {
-        // "http://localhost:4242"
-        &self.base_url
+impl From<client_api::Client> for BillingClient {
+    fn from(client: client_api::Client) -> Self {
+        Self {
+            billing_base_url: client.base_url.clone(),
+            client,
+        }
+    }
+}
+
+impl BillingClient {
+    pub fn set_billing_base_url(&mut self, billing_base_url: String) {
+        self.billing_base_url = billing_base_url;
     }
 
-    async fn create_subscription(
+    pub async fn create_subscription(
         &self,
         workspace_id: &str,
         recurring_interval: RecurringInterval,
@@ -52,10 +34,11 @@ impl WorkspaceSubscriptionClient for client_api::Client {
     ) -> Result<String, AppResponseError> {
         let url = format!(
             "{}/billing/api/v1/subscription-link",
-            &self.billing_base_url(),
+            &self.billing_base_url,
         );
 
         let resp = self
+            .client
             .http_client_with_auth(Method::GET, &url)
             .await?
             .query(&[
@@ -75,12 +58,13 @@ impl WorkspaceSubscriptionClient for client_api::Client {
             .into_data()
     }
 
-    async fn cancel_subscription(&self, workspace_id: &str) -> Result<(), AppResponseError> {
+    pub async fn cancel_subscription(&self, workspace_id: &str) -> Result<(), AppResponseError> {
         let url = format!(
             "{}/billing/api/v1/cancel-subscription",
-            &self.billing_base_url(),
+            &self.billing_base_url,
         );
         let resp = self
+            .client
             .http_client_with_auth(Method::POST, &url)
             .await?
             .json(&json!({ "workspace_id": workspace_id }))
@@ -89,14 +73,15 @@ impl WorkspaceSubscriptionClient for client_api::Client {
         AppResponse::<()>::from_response(resp).await?.into_error()
     }
 
-    async fn list_subscription(
+    pub async fn list_subscription(
         &self,
     ) -> Result<Vec<WorkspaceSubscriptionStatus>, AppResponseError> {
         let url = format!(
             "{}/billing/api/v1/subscription-status",
-            &self.billing_base_url(),
+            &self.billing_base_url
         );
         let resp = self
+            .client
             .http_client_with_auth(Method::GET, &url)
             .await?
             .send()
@@ -107,13 +92,13 @@ impl WorkspaceSubscriptionClient for client_api::Client {
             .into_data()
     }
 
-    async fn get_workspace_usage(
+    pub async fn get_workspace_usage(
         &self,
         workspace_id: &str,
     ) -> Result<WorkspaceUsage, AppResponseError> {
-        let num_members = self.get_workspace_members(workspace_id).await?.len();
-        let limits = get_workspace_limits(self, workspace_id).await?;
-        let doc_usage = self.get_workspace_usage(workspace_id).await?;
+        let num_members = self.client.get_workspace_members(workspace_id).await?.len();
+        let limits = get_workspace_limits(&self.client, workspace_id).await?;
+        let doc_usage = self.client.get_workspace_usage(workspace_id).await?;
 
         let workspace_usage = WorkspaceUsage {
             member_count: num_members,
@@ -124,12 +109,13 @@ impl WorkspaceSubscriptionClient for client_api::Client {
         Ok(workspace_usage)
     }
 
-    async fn get_portal_session_link(&self) -> Result<String, AppResponseError> {
+    pub async fn get_portal_session_link(&self) -> Result<String, AppResponseError> {
         let url = format!(
             "{}/billing/api/v1/portal-session-link",
-            &self.billing_base_url(),
+            &self.billing_base_url,
         );
         let portal_url = self
+            .client
             .http_client_with_auth(Method::GET, &url)
             .await?
             .send()
