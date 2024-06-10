@@ -62,6 +62,7 @@ pub struct WorkspaceSubscriptionStatus {
     pub workspace_plan: WorkspaceSubscriptionPlan,
     pub recurring_interval: RecurringInterval,
     pub subscription_status: SubscriptionStatus,
+    pub subscription_quantity: u64,
     pub canceled_at: Option<i64>,
 }
 
