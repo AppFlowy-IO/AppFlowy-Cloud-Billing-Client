@@ -6,13 +6,13 @@ use reqwest::Method;
 use serde_json::json;
 use shared_entity::response::AppResponse;
 
-pub struct BillingClient {
+pub struct BillingClient<'a> {
     billing_base_url: String,
-    client: client_api::Client,
+    client: &'a client_api::Client,
 }
 
-impl From<client_api::Client> for BillingClient {
-    fn from(client: client_api::Client) -> Self {
+impl<'a> From<&'a client_api::Client> for BillingClient<'a> {
+    fn from(client: &'a client_api::Client) -> Self {
         Self {
             billing_base_url: client.base_url.clone(),
             client,
@@ -20,7 +20,7 @@ impl From<client_api::Client> for BillingClient {
     }
 }
 
-impl BillingClient {
+impl BillingClient<'_> {
     pub fn set_billing_base_url(&mut self, billing_base_url: String) {
         self.billing_base_url = billing_base_url;
     }
@@ -112,7 +112,7 @@ impl BillingClient {
         workspace_id: &str,
     ) -> Result<WorkspaceUsage, AppResponseError> {
         let num_members = self.client.get_workspace_members(workspace_id).await?.len();
-        let limits = get_workspace_limits(&self.client, workspace_id).await?;
+        let limits = get_workspace_limits(self.client, workspace_id).await?;
         let doc_usage = self.client.get_workspace_usage(workspace_id).await?;
 
         let workspace_usage = WorkspaceUsage {

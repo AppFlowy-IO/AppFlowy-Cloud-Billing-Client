@@ -19,7 +19,7 @@ async fn test_payment_link() {
         .workspace_id
         .to_string();
 
-    let url = BillingClient::from(client)
+    let url = BillingClient::from(&client)
         .create_subscription(
             &workspace_id,
             RecurringInterval::Month,
@@ -44,7 +44,7 @@ async fn test_get_subscription() {
         .await
         .unwrap();
 
-    let subscriptions = BillingClient::from(client)
+    let subscriptions = BillingClient::from(&client)
         .list_subscription()
         .await
         .unwrap();
@@ -73,7 +73,7 @@ async fn test_cancel_subscription() {
         .workspace_id
         .to_string();
 
-    BillingClient::from(client)
+    BillingClient::from(&client)
         .cancel_subscription(&workspace_id)
         .await
         .unwrap();
@@ -101,7 +101,7 @@ async fn test_get_usage() {
         .workspace_id
         .to_string();
 
-    let u = BillingClient::from(client)
+    let u = BillingClient::from(&client)
         .get_workspace_usage(&workspace_id)
         .await
         .unwrap();
@@ -120,7 +120,7 @@ async fn test_get_portal_link() {
         .await
         .unwrap();
 
-    let url = BillingClient::from(client)
+    let url = BillingClient::from(&client)
         .get_portal_session_link()
         .await
         .unwrap();
